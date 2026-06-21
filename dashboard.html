@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Czyrille's Automations</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="wordmark">Czyrille's</div>
+      <div class="name">Automations</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Workspace</div>
+
+      <button class="nav-item active" onclick="setPage('reports', this)">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 2h6l3 3v9a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+          <path stroke-linecap="round" d="M9 2v3h3M5.5 7.5h5M5.5 10h5M5.5 12.5h3"/>
+        </svg>
+        <span class="nav-label">Offset Form</span>
+        <span class="badge" id="recent-badge">0</span>
+      </button>
+
+      <button class="nav-item soon" title="Coming soon">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="4" width="12" height="9" rx="1"/>
+          <path stroke-linecap="round" d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/>
+        </svg>
+        <span class="nav-label">Diko pa Alam</span>
+        <span class="badge">Soon</span>
+      </button>
+
+      <button class="nav-item soon" title="Coming soon">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="5.5"/>
+          <path stroke-linecap="round" d="M8 5.5V8l2 1.5"/>
+        </svg>
+        <span class="nav-label">Di ko pa alam</span>
+        <span class="badge">Soon</span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <span class="topbar-title" id="topbar-title">Work Report</span>
+      <div class="topbar-actions">
+        <div class="format-group">
+          <button class="format-opt active" id="opt-docx" onclick="setFormat('docx')">Word</button>
+          <button class="format-opt" id="opt-pdf" onclick="setFormat('pdf')">PDF</button>
+        </div>
+        <button class="btn btn-primary" id="gen-btn" onclick="generate()">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 2v9M5 8l3 3 3-3M3 13h10"/>
+          </svg>
+          Download
+        </button>
+      </div>
+    </div>
+
+    <!-- Report page -->
+    <div id="page-reports" class="report-layout">
+
+      <!-- Form column -->
+      <div class="report-form-col">
+
+        <!-- Recents -->
+        <div class="card section-gap" id="recents-card">
+          <div class="card-header">
+            <h2>Today's reports</h2>
+            <button class="btn btn-ghost btn-sm" onclick="clearRecents()">Clear</button>
+          </div>
+          <div class="card-body compact">
+            <div class="recents-list" id="recents-list">
+              <div class="empty-state"><p>No reports yet today.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="card section-gap">
+          <div class="card-header"><h2>Report details</h2></div>
+          <div class="card-body">
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input type="text" id="f-name" placeholder="Full name" oninput="livePreview()" />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-date">Date</label>
+                <input type="date" id="f-date" oninput="livePreview()" />
+              </div>
+              <div class="field"></div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-timein">Time In</label>
+                <input type="time" id="f-timein" oninput="livePreview()" />
+              </div>
+              <div class="field">
+                <label for="f-timeout">Time Out</label>
+                <input type="time" id="f-timeout" oninput="livePreview()" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-purpose">Purpose of Work</label>
+              <input type="text" id="f-purpose" placeholder="e.g.  For Marketing, Instagram Posting…" oninput="livePreview()" />
+            </div>
+            <div class="field">
+              <label for="f-desc">Description</label>
+              <textarea id="f-desc" placeholder="Describe the work done in detail…" oninput="livePreview()"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photos -->
+        <div class="card section-gap">
+          <div class="card-header">
+            <h2>Photos</h2>
+            <div class="card-header-actions">
+              <span class="t-caption" id="photo-count"></span>
+              <button class="btn btn-ghost btn-sm" id="clear-photos-btn" onclick="clearAllPhotos()" hidden>Clear all</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="upload-zone" id="upload-zone">
+              <input type="file" id="photo-input" accept="image/*" multiple aria-label="Upload photos" />
+              <svg class="upload-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
+              <p><strong>Click to upload</strong> or drag & drop</p>
+              <p class="t-caption mt-sm">All photos will be uniform size in the document</p>
+            </div>
+            <div class="photo-grid" id="photo-grid"></div>
+          </div>
+        </div>
+
+        <!-- Signatories -->
+        <div class="card section-gap" id="signatories-card">
+          <div class="card-header">
+            <h2>Signatories</h2>
+            <label class="toggle">
+              <input type="checkbox" id="show-signatories" checked onchange="toggleSignatories(this.checked)" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              <span class="toggle-label">Show in report</span>
+            </label>
+          </div>
+          <div class="card-body" id="signatories-body">
+            <div class="field-row">
+              <div class="field">
+                <label for="f-emp">Employee Name</label>
+                <input type="text" id="f-emp" placeholder="Employee's full name" oninput="livePreview()" />
+              </div>
+              <div class="field">
+                <label for="f-mgr">Manager Name</label>
+                <input type="text" id="f-mgr" placeholder="Manager's full name" oninput="livePreview()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /form col -->
+
+      <!-- Preview column -->
+      <div class="report-preview-col preview-pane">
+        <div class="preview-header">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" d="M1.5 8s2.5-4.5 6.5-4.5S14.5 8 14.5 8s-2.5 4.5-6.5 4.5S1.5 8 1.5 8z"/>
+            <circle cx="8" cy="8" r="2"/>
+          </svg>
+          <span>Live preview</span>
+        </div>
+
+        <!-- A4 paper simulation -->
+        <div class="doc-paper" id="doc-paper">
+
+          <div class="doc-title-row">
+            <div>
+              <div class="doc-brand">Czyrille's Automations</div>
+              <div class="doc-title">Work Report</div>
+            </div>
+            <div class="doc-date-badge" id="doc-date-badge">
+              Date: —<br/>Time In: —<br/>Time Out: —
+            </div>
+          </div>
+
+          <div class="doc-fields">
+            <div>
+              <div class="doc-field-label">Name</div>
+              <div class="doc-field-value" id="dv-name">—</div>
+            </div>
+            <div>
+              <div class="doc-field-label">Purpose of Work</div>
+              <div class="doc-field-value" id="dv-purpose">—</div>
+            </div>
+            <div class="doc-field-full">
+              <div class="doc-field-label">Description</div>
+              <div class="doc-field-value" id="dv-desc">—</div>
+            </div>
+          </div>
+
+          <hr class="doc-divider" />
+
+          <div id="doc-photos-section" class="is-hidden">
+            <div class="doc-section-title">Photos</div>
+            <div class="doc-photo-grid" id="doc-photo-grid"></div>
+            <hr class="doc-divider" />
+          </div>
+
+          <div class="doc-sig-row" id="doc-sig-section">
+            <div class="doc-sig-block">
+              <div class="doc-sig-line"></div>
+              <div class="doc-sig-name" id="dv-emp">Employee Name</div>
+              <div class="doc-sig-role">Employee Signature</div>
+            </div>
+            <div class="doc-sig-block">
+              <div class="doc-sig-line"></div>
+              <div class="doc-sig-name" id="dv-mgr">Manager Name</div>
+              <div class="doc-sig-role">Manager's Signature</div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /preview col -->
+
+    </div><!-- /report-layout -->
+
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
+<script src="report.js"></script>
+</body>
+</html>
